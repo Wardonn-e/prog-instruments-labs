@@ -1,26 +1,28 @@
 import sys
+
 import pygame
 import colour
 import random
 
-size_of_window = [2000, 1500]
-pygame.init()
-win = pygame.display.set_mode(size_of_window)
+SIZE_OF_WINDOW = [2000, 1500]
+COUNT_OF_ENEMY = 20
+RANDOM_SPEED = True
+RANDOM_COLOR = True
+INFINITY = True
+BACKGROUND_COLOR = (0, 0, 0)
+DEFAULT_STEP_WAVE = 20
+DEFAULT_LAST_WAVE_SCORE = 1
 
-count_of_enemy = 20
-random_spead = True
-random_color = True
-infinity = True
-background_color = (0, 0, 0)
+pygame.init()
+win = pygame.display.set_mode(SIZE_OF_WINDOW)
+
 enemies_list = []
 running = True
 score = 0
 player = None
 wave = 1
-default_step_wave = 20
-step_wave = default_step_wave
-default_last_wave_score = 1
-last_wave_score = default_last_wave_score
+step_wave = DEFAULT_STEP_WAVE
+last_wave_score = DEFAULT_LAST_WAVE_SCORE
 game_over = False
 generate_enemy = True
 play_again_rect = None
@@ -39,7 +41,7 @@ class ManagementGame:
             100, 100, 1000, 1300, "white", False, False, False,
             False, 8, 0, False, False
         )
-        for num in range(count_of_enemy + 1):
+        for num in range(COUNT_OF_ENEMY + 1):
             Rect()
         play_again_rect = Rect(
             300, 200, 1450, 1000, "white", False, False, False,
@@ -106,8 +108,8 @@ class ManagementGame:
                 running = True
                 generate_enemy = True
                 game_over = False
-                last_wave_score = default_last_wave_score
-                step_wave = default_step_wave
+                last_wave_score = DEFAULT_LAST_WAVE_SCORE
+                step_wave = DEFAULT_STEP_WAVE
                 score = 0
                 wave = 1
 
@@ -143,13 +145,13 @@ class ManagementGame:
     @staticmethod
     def manage_wave():
         global last_wave_score, step_wave, generate_enemy, wave
-        global starting_time, running, end_flag_starting_time, count_of_enemy
+        global starting_time, running, end_flag_starting_time, COUNT_OF_ENEMY
 
         if (score - last_wave_score - step_wave) > 0:
             last_wave_score = score
             wave += 1
-            count_of_enemy += 2
-            step_wave += count_of_enemy * 2
+            COUNT_OF_ENEMY += 2
+            step_wave += COUNT_OF_ENEMY * 2
             starting_time = True
             running = False
             ManagementGame.clear_enemy()
@@ -195,31 +197,31 @@ class ManagementGame:
         player.show()
         if running:
             if generate_enemy:
-                if len(enemies_list) < count_of_enemy:
+                if len(enemies_list) < COUNT_OF_ENEMY:
                     Rect()
 
             for item in enemies_list:
                 item.move_y()
                 item.check()
         pygame.display.update()
-        win.fill(background_color)
+        win.fill(BACKGROUND_COLOR)
 
     @staticmethod
     def check_player():
         global player
-        if player.x + player.w > size_of_window[0]:
-            player.x = size_of_window[0] - player.w
+        if player.x + player.w > SIZE_OF_WINDOW[0]:
+            player.x = SIZE_OF_WINDOW[0] - player.w
         if player.x < 0:
             player.x = 0
         if player.y < 0:
             player.y = 0
-        if player.y + player.h > size_of_window[1]:
-            player.y = size_of_window[1] - player.h
+        if player.y + player.h > SIZE_OF_WINDOW[1]:
+            player.y = SIZE_OF_WINDOW[1] - player.h
 
 
 class Color:
     color_rgb = None
-    name_of_some_color = [
+    NAME_OF_SOME_COLOR = [
         'DarkGreen', 'Green', 'DarkCyan', 'DeepSkyBlue', 'DarkTurquoise',
         'MediumSpringGreen', 'Lime', 'SpringGreen', 'Cyan', 'Aqua',
         'MidnightBlue', 'DodgerBlue', 'LightSeaGreen', 'ForestGreen',
@@ -242,7 +244,7 @@ class Color:
         return self.color_rgb
 
     def get_random_color(self):
-        self.get_rgb(random.choice(self.name_of_some_color))
+        self.get_rgb(random.choice(self.NAME_OF_SOME_COLOR))
 
 
 class Rect:
@@ -296,7 +298,7 @@ class Rect:
             self.w = random.randint(30, 150)
             self.h = random.randint(30, 150)
         if self.rand_position_x:
-            self.x = random.randint(0, size_of_window[0])
+            self.x = random.randint(0, SIZE_OF_WINDOW[0])
         if self.rand_spead:
             self.spead = random.randint(1, 10)
         if self.rand_border:
@@ -313,7 +315,7 @@ class Rect:
         )
 
     def destroyer(self):
-        if self.y > (size_of_window[1] + 200):
+        if self.y > (SIZE_OF_WINDOW[1] + 200):
             enemies_list.remove(self)
             global score
             score += 1
