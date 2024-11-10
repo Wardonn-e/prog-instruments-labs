@@ -4,6 +4,9 @@ import pygame
 import colour
 import random
 
+from typing import Tuple, List, Optional
+
+
 SIZE_OF_WINDOW = [2000, 1500]
 COUNT_OF_ENEMY = 20
 RANDOM_SPEED = True
@@ -35,7 +38,7 @@ end_flag_starting_time = False
 
 class ManagementGame:
     @staticmethod
-    def init():
+    def init() -> None:
         global play_again_rect, quit_rect, player
         player = Rect(
             100, 100, 1000, 1300, "white", False, False, False,
@@ -53,7 +56,7 @@ class ManagementGame:
         )
 
     @staticmethod
-    def game_over():
+    def game_over() -> None:
         global game_over, running, player
         game_over = True
         running = False
@@ -62,7 +65,7 @@ class ManagementGame:
         print('hi')
 
     @staticmethod
-    def show_title(score):
+    def show_title(score: int) -> None:
         global wave
         text_score = pygame.font.Font(None, 80)
         win.blit(
@@ -78,7 +81,7 @@ class ManagementGame:
             ManagementGame.game_over_title()
 
     @staticmethod
-    def game_over_title():
+    def game_over_title() -> None:
         global play_again_rect, quit_rect, player, running, generate_enemy
         global game_over, wave, last_wave_score, score, step_wave
 
@@ -137,13 +140,13 @@ class ManagementGame:
         )
 
     @staticmethod
-    def clear_enemy():
+    def clear_enemy() -> None:
         enemies_list.clear()
         player.x = 940
         player.y = 1100
 
     @staticmethod
-    def manage_wave():
+    def manage_wave() -> None:
         global last_wave_score, step_wave, generate_enemy, wave
         global starting_time, running, end_flag_starting_time, COUNT_OF_ENEMY
 
@@ -169,7 +172,7 @@ class ManagementGame:
             )
 
     @staticmethod
-    def check_time(count):
+    def check_time(count: int) -> bool:
         global i_for_wave, starting_time, end_flag_starting_time
         i_for_wave += 1
         if i_for_wave - count == 0:
@@ -180,7 +183,7 @@ class ManagementGame:
         return False
 
     @staticmethod
-    def into_while():
+    def into_while() -> None:
         ManagementGame.show_title(score)
         ManagementGame.manage_wave()
         keys = pygame.key.get_pressed()
@@ -207,7 +210,7 @@ class ManagementGame:
         win.fill(BACKGROUND_COLOR)
 
     @staticmethod
-    def check_player():
+    def check_player() -> None:
         global player
         if player.x + player.w > SIZE_OF_WINDOW[0]:
             player.x = SIZE_OF_WINDOW[0] - player.w
@@ -220,8 +223,8 @@ class ManagementGame:
 
 
 class Color:
-    color_rgb = None
-    NAME_OF_SOME_COLOR = [
+    color_rgb: Optional[Tuple[int, int, int]] = None
+    NAME_OF_SOME_COLOR: List[str] = [
         'DarkGreen', 'Green', 'DarkCyan', 'DeepSkyBlue', 'DarkTurquoise',
         'MediumSpringGreen', 'Lime', 'SpringGreen', 'Cyan', 'Aqua',
         'MidnightBlue', 'DodgerBlue', 'LightSeaGreen', 'ForestGreen',
@@ -230,20 +233,20 @@ class Color:
         'DarkSlateBlue', 'MediumTurquoise'
     ]
 
-    def __init__(self, color="white"):
+    def __init__(self, color: str = "white") -> None:
         self.get_rgb(color)
 
-    def get_rgb(self, color):
+    def get_rgb(self, color: str) -> None:
         c = list(colour.Color(color).get_rgb())
         c[0] = int(c[0] * 255)
         c[1] = int(c[1] * 255)
         c[2] = int(c[2] * 255)
         self.color_rgb = tuple(c)
 
-    def get_color(self):
+    def get_color(self) -> Optional[Tuple[int, int, int]]:
         return self.color_rgb
 
-    def get_random_color(self):
+    def get_random_color(self) -> None:
         self.get_rgb(random.choice(self.NAME_OF_SOME_COLOR))
 
 
@@ -262,10 +265,10 @@ class Rect:
     rand_border = None
 
     def __init__(
-            self, w=0, h=0, x=0, y=0, color="white",
-            rand_color=True, rand_size=True, rand_position_x=True,
-            rand_spead=True, spead=5, border=5, append=True, rand_border=True
-    ):
+            self, w: int = 0, h: int = 0, x: int = 0, y: int = 0, color: str = "white",
+            rand_color: bool = True, rand_size: bool = True, rand_position_x: bool = True,
+            rand_spead: bool = True, spead: int = 5, border: int = 5, append: bool = True, rand_border: bool = True
+    ) -> None:
         self.rand_color = rand_color
         self.x = x
         self.y = y
@@ -284,12 +287,12 @@ class Rect:
         if append:
             enemies_list.append(self)
 
-    def move_y(self, direction=True):
+    def move_y(self, direction: bool = True) -> None:
         self.y += self.spead if direction else -self.spead
         self.show()
         self.destroyer()
 
-    def random(self):
+    def random(self) -> None:
         if self.rand_color:
             color = Color()
             color.get_random_color()
@@ -304,23 +307,23 @@ class Rect:
         if self.rand_border:
             self.border = random.randint(4, 15) if random.randint(0, 1) else 0
 
-    def move_x(self, direction=True):
+    def move_x(self, direction: bool = True) -> None:
         self.x += self.spead if direction else -self.spead
         self.show()
         self.destroyer()
 
-    def show(self):
+    def show(self) -> None:
         pygame.draw.rect(
             win, self.color, ((self.x, self.y), (self.w, self.h)), self.border
         )
 
-    def destroyer(self):
+    def destroyer(self) -> None:
         if self.y > (SIZE_OF_WINDOW[1] + 200):
             enemies_list.remove(self)
             global score
             score += 1
 
-    def check(self):
+    def check(self) -> None:
         if (
             (self.x < player.x < self.x + self.w) or
             (player.x < self.x < player.x + player.w) or
