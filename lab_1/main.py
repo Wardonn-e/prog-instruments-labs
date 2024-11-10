@@ -1,86 +1,84 @@
 import sys
-
-import random
 import pygame
 import colour
+import random
 
-
-sizeOfWindow = [2000, 1500]
+size_of_window = [2000, 1500]
 pygame.init()
-win = pygame.display.set_mode(sizeOfWindow)
+win = pygame.display.set_mode(size_of_window)
 
-countOfEnemy = 20
-randomSpead = True
-randomColor = True
+count_of_enemy = 20
+random_spead = True
+random_color = True
 infinity = True
-backgroundColor = (0, 0, 0)
-enemiesList = []
+background_color = (0, 0, 0)
+enemies_list = []
 running = True
 score = 0
 player = None
 wave = 1
-defaultStepWave = 20
-stepWave = defaultStepWave
-defaultLastWaveScore = 1
-lastWaveScore = defaultLastWaveScore
-gameOver = False
-generateEnemy = True
-playAgainR = None
-quitR = None
+default_step_wave = 20
+step_wave = default_step_wave
+default_last_wave_score = 1
+last_wave_score = default_last_wave_score
+game_over = False
+generate_enemy = True
+play_again_rect = None
+quit_rect = None
 
-iForWave = 0
-startingTime = False
-endFlagStartingTime = False
+i_for_wave = 0
+starting_time = False
+end_flag_starting_time = False
 
 
 class ManagementGame:
     @staticmethod
     def init():
-        global playAgainR, quitR, player
+        global play_again_rect, quit_rect, player
         player = Rect(
             100, 100, 1000, 1300, "white", False, False, False,
             False, 8, 0, False, False
         )
-        for num in range(countOfEnemy + 1):
+        for num in range(count_of_enemy + 1):
             Rect()
-        playAgainR = Rect(
+        play_again_rect = Rect(
             300, 200, 1450, 1000, "white", False, False, False,
             False, 0, 5, False, False
         )
-        quitR = Rect(
+        quit_rect = Rect(
             300, 200, 250, 1000, "white", False, False, False,
             False, 0, 5, False, False
         )
 
     @staticmethod
-    def gameOver():
-        global gameOver, running, player
-        gameOver = True
+    def game_over():
+        global game_over, running, player
+        game_over = True
         running = False
         pygame.display.update()
-        ManagementGame.clearEnemy()
+        ManagementGame.clear_enemy()
         print('hi')
 
     @staticmethod
-    def showTitle(score):
+    def show_title(score):
         global wave
-        textScore = pygame.font.Font(None, 80)
+        text_score = pygame.font.Font(None, 80)
         win.blit(
-            textScore.render(f"Score: {score}", False, (255, 255, 255)),
+            text_score.render(f"Score: {score}", False, (255, 255, 255)),
             (0, 0)
         )
-        textScore = pygame.font.Font(None, 60)
+        text_score = pygame.font.Font(None, 60)
         win.blit(
-            textScore.render(f"wave: {wave}", False, (255, 0, 255)),
+            text_score.render(f"wave: {wave}", False, (255, 0, 255)),
             (0, 60)
         )
-        if gameOver:
-            ManagementGame.GameOverTitle()
+        if game_over:
+            ManagementGame.game_over_title()
 
     @staticmethod
-    def GameOverTitle():
-        global playAgainR, quitR, player, running, generateEnemy
-        global gameOver, wave, lastWaveScore, score, stepWave
+    def game_over_title():
+        global play_again_rect, quit_rect, player, running, generate_enemy
+        global game_over, wave, last_wave_score, score, step_wave
 
         text = pygame.font.Font(None, 250)
         text2 = pygame.font.Font(None, 100)
@@ -93,135 +91,135 @@ class ManagementGame:
             (720, 850)
         )
 
-        playAgainR.show()
-        quitR.show()
+        play_again_rect.show()
+        quit_rect.show()
 
         if (
-            (playAgainR.x < player.x < playAgainR.x + playAgainR.w) or
-            (player.x < playAgainR.x < player.x + player.w) or
-            (player.x == playAgainR.x)
+            (play_again_rect.x < player.x < play_again_rect.x + play_again_rect.w) or
+            (player.x < play_again_rect.x < player.x + player.w) or
+            (player.x == play_again_rect.x)
         ):
             if (
-                (playAgainR.y < player.y < playAgainR.y + playAgainR.h) or
-                (player.y < playAgainR.y < player.y + player.h)
+                (play_again_rect.y < player.y < play_again_rect.y + play_again_rect.h) or
+                (player.y < play_again_rect.y < player.y + player.h)
             ):
                 running = True
-                generateEnemy = True
-                gameOver = False
-                lastWaveScore = defaultLastWaveScore
-                stepWave = defaultStepWave
+                generate_enemy = True
+                game_over = False
+                last_wave_score = default_last_wave_score
+                step_wave = default_step_wave
                 score = 0
                 wave = 1
 
         if (
-            (quitR.x < player.x < quitR.x + quitR.w) or
-            (player.x < quitR.x < player.x + player.w) or
-            (player.x == quitR.x)
+            (quit_rect.x < player.x < quit_rect.x + quit_rect.w) or
+            (player.x < quit_rect.x < player.x + player.w) or
+            (player.x == quit_rect.x)
         ):
             if (
-                (quitR.y < player.y < quitR.y + quitR.h) or
-                (player.y < quitR.y < player.y + player.h)
+                (quit_rect.y < player.y < quit_rect.y + quit_rect.h) or
+                (player.y < quit_rect.y < player.y + player.h)
             ):
                 pygame.quit()
                 sys.exit()
 
-        playAgainT = pygame.font.Font(None, 100)
-        quitT = pygame.font.Font(None, 100)
+        play_again_text = pygame.font.Font(None, 100)
+        quit_text = pygame.font.Font(None, 100)
         win.blit(
-            playAgainT.render("again", False, (255, 255, 255)),
+            play_again_text.render("again", False, (255, 255, 255)),
             (1510, 1060)
         )
         win.blit(
-            quitT.render("quit", False, (255, 255, 255)),
+            quit_text.render("quit", False, (255, 255, 255)),
             (330, 1060)
         )
 
     @staticmethod
-    def clearEnemy():
-        enemiesList.clear()
+    def clear_enemy():
+        enemies_list.clear()
         player.x = 940
         player.y = 1100
 
     @staticmethod
-    def manageWave():
-        global lastWaveScore, stepWave, generateEnemy, wave
-        global startingTime, running, endFlagStartingTime, countOfEnemy
+    def manage_wave():
+        global last_wave_score, step_wave, generate_enemy, wave
+        global starting_time, running, end_flag_starting_time, count_of_enemy
 
-        if (score - lastWaveScore - stepWave) > 0:
-            lastWaveScore = score
+        if (score - last_wave_score - step_wave) > 0:
+            last_wave_score = score
             wave += 1
-            countOfEnemy += 2
-            stepWave += countOfEnemy * 2
-            startingTime = True
+            count_of_enemy += 2
+            step_wave += count_of_enemy * 2
+            starting_time = True
             running = False
-            ManagementGame.clearEnemy()
-        ManagementGame.checkTime(1000)
-        if endFlagStartingTime and not gameOver:
-            generateEnemy = True
+            ManagementGame.clear_enemy()
+        ManagementGame.check_time(1000)
+        if end_flag_starting_time and not game_over:
+            generate_enemy = True
             running = True
-            endFlagStartingTime = False
+            end_flag_starting_time = False
 
-        if startingTime:
-            textWave = pygame.font.Font(None, 80)
+        if starting_time:
+            text_wave = pygame.font.Font(None, 80)
             win.blit(
-                textWave.render(f"Wave: {wave}", False, (255, 255, 255)),
+                text_wave.render(f"Wave: {wave}", False, (255, 255, 255)),
                 (450, 650)
             )
 
     @staticmethod
-    def checkTime(count):
-        global iForWave, startingTime, endFlagStartingTime
-        iForWave += 1
-        if iForWave - count == 0:
-            iForWave = 0
-            startingTime = False
-            endFlagStartingTime = True
+    def check_time(count):
+        global i_for_wave, starting_time, end_flag_starting_time
+        i_for_wave += 1
+        if i_for_wave - count == 0:
+            i_for_wave = 0
+            starting_time = False
+            end_flag_starting_time = True
             return True
         return False
 
     @staticmethod
-    def intoWhile():
-        ManagementGame.showTitle(score)
-        ManagementGame.manageWave()
+    def into_while():
+        ManagementGame.show_title(score)
+        ManagementGame.manage_wave()
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP]:
-            player.moveY(False)
+            player.move_y(False)
         if keys[pygame.K_DOWN]:
-            player.moveY()
+            player.move_y()
         if keys[pygame.K_LEFT]:
-            player.moveX(False)
+            player.move_x(False)
         if keys[pygame.K_RIGHT]:
-            player.moveX()
+            player.move_x()
 
-        ManagementGame.checkPlayer()
+        ManagementGame.check_player()
         player.show()
         if running:
-            if generateEnemy:
-                if len(enemiesList) < countOfEnemy:
+            if generate_enemy:
+                if len(enemies_list) < count_of_enemy:
                     Rect()
 
-            for item in enemiesList:
-                item.moveY()
+            for item in enemies_list:
+                item.move_y()
                 item.check()
         pygame.display.update()
-        win.fill(backgroundColor)
+        win.fill(background_color)
 
     @staticmethod
-    def checkPlayer():
+    def check_player():
         global player
-        if player.x + player.w > sizeOfWindow[0]:
-            player.x = sizeOfWindow[0] - player.w
+        if player.x + player.w > size_of_window[0]:
+            player.x = size_of_window[0] - player.w
         if player.x < 0:
             player.x = 0
         if player.y < 0:
             player.y = 0
-        if player.y + player.h > sizeOfWindow[1]:
-            player.y = sizeOfWindow[1] - player.h
+        if player.y + player.h > size_of_window[1]:
+            player.y = size_of_window[1] - player.h
 
 
 class Color:
-    colorRGB = None
-    nameOfSomeColor = [
+    color_rgb = None
+    name_of_some_color = [
         'DarkGreen', 'Green', 'DarkCyan', 'DeepSkyBlue', 'DarkTurquoise',
         'MediumSpringGreen', 'Lime', 'SpringGreen', 'Cyan', 'Aqua',
         'MidnightBlue', 'DodgerBlue', 'LightSeaGreen', 'ForestGreen',
@@ -231,20 +229,20 @@ class Color:
     ]
 
     def __init__(self, color="white"):
-        self.getRGB(color)
+        self.get_rgb(color)
 
-    def getRGB(self, color):
+    def get_rgb(self, color):
         c = list(colour.Color(color).get_rgb())
         c[0] = int(c[0] * 255)
         c[1] = int(c[1] * 255)
         c[2] = int(c[2] * 255)
-        self.colorRGB = tuple(c)
+        self.color_rgb = tuple(c)
 
-    def getColor(self):
-        return self.colorRGB
+    def get_color(self):
+        return self.color_rgb
 
-    def getRandomColor(self):
-        self.getRGB(random.choice(self.nameOfSomeColor))
+    def get_random_color(self):
+        self.get_rgb(random.choice(self.name_of_some_color))
 
 
 class Rect:
@@ -255,56 +253,56 @@ class Rect:
     color = None
     spead = None
     border = None
-    randColor = None
-    randSize = None
-    randPositionX = None
-    randSpead = None
-    randBorder = None
+    rand_color = None
+    rand_size = None
+    rand_position_x = None
+    rand_spead = None
+    rand_border = None
 
     def __init__(
             self, w=0, h=0, x=0, y=0, color="white",
-            randColor=True, randSize=True, randPositionX=True,
-            randSpead=True, spead=5, border=5, append=True, randBorder=True
+            rand_color=True, rand_size=True, rand_position_x=True,
+            rand_spead=True, spead=5, border=5, append=True, rand_border=True
     ):
-        self.randColor = randColor
+        self.rand_color = rand_color
         self.x = x
         self.y = y
         self.spead = spead
         self.color = color
         self.border = border
-        self.randSize = randSize
+        self.rand_size = rand_size
         self.w = w
         self.h = h
-        self.randPositionX = randPositionX
-        self.randSpead = randSpead
-        self.randBorder = randBorder
+        self.rand_position_x = rand_position_x
+        self.rand_spead = rand_spead
+        self.rand_border = rand_border
         self.random()
         self.show()
 
         if append:
-            enemiesList.append(self)
+            enemies_list.append(self)
 
-    def moveY(self, direction=True):
+    def move_y(self, direction=True):
         self.y += self.spead if direction else -self.spead
         self.show()
         self.destroyer()
 
     def random(self):
-        if self.randColor:
+        if self.rand_color:
             color = Color()
-            color.getRandomColor()
-            self.color = color.colorRGB
-        if self.randSize:
+            color.get_random_color()
+            self.color = color.color_rgb
+        if self.rand_size:
             self.w = random.randint(30, 150)
             self.h = random.randint(30, 150)
-        if self.randPositionX:
-            self.x = random.randint(0, sizeOfWindow[0])
-        if self.randSpead:
+        if self.rand_position_x:
+            self.x = random.randint(0, size_of_window[0])
+        if self.rand_spead:
             self.spead = random.randint(1, 10)
-        if self.randBorder:
+        if self.rand_border:
             self.border = random.randint(4, 15) if random.randint(0, 1) else 0
 
-    def moveX(self, direction=True):
+    def move_x(self, direction=True):
         self.x += self.spead if direction else -self.spead
         self.show()
         self.destroyer()
@@ -315,8 +313,8 @@ class Rect:
         )
 
     def destroyer(self):
-        if self.y > (sizeOfWindow[1] + 200):
-            enemiesList.remove(self)
+        if self.y > (size_of_window[1] + 200):
+            enemies_list.remove(self)
             global score
             score += 1
 
@@ -330,13 +328,13 @@ class Rect:
                 (self.y < player.y < self.y + self.h) or
                 (player.y < self.y < player.y + player.h)
             ):
-                ManagementGame.gameOver()
+                ManagementGame.game_over()
 
 
 ManagementGame.init()
 
 while True:
-    ManagementGame.intoWhile()
+    ManagementGame.into_while()
     events = pygame.event.get()
     for item in events:
         if item.type == pygame.QUIT:
