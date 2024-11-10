@@ -37,8 +37,11 @@ end_flag_starting_time = False
 
 
 class ManagementGame:
+    """Class for managing game states and controls."""
+
     @staticmethod
     def init() -> None:
+        """Initializes player and enemy rectangles."""
         global play_again_rect, quit_rect, player
         player = Rect(
             100, 100, 1000, 1300, "white", False, False, False,
@@ -57,6 +60,7 @@ class ManagementGame:
 
     @staticmethod
     def game_over() -> None:
+        """Ends the game and clears enemies."""
         global game_over, running, player
         game_over = True
         running = False
@@ -66,6 +70,7 @@ class ManagementGame:
 
     @staticmethod
     def show_title(score: int) -> None:
+        """Displays the current score and wave on the screen."""
         global wave
         text_score = pygame.font.Font(None, 80)
         win.blit(
@@ -82,6 +87,7 @@ class ManagementGame:
 
     @staticmethod
     def game_over_title() -> None:
+        """Displays 'Game Over' screen and handles restart or quit options."""
         global play_again_rect, quit_rect, player, running, generate_enemy
         global game_over, wave, last_wave_score, score, step_wave
 
@@ -99,6 +105,7 @@ class ManagementGame:
         play_again_rect.show()
         quit_rect.show()
 
+        # Logic to restart or quit
         if (
             (play_again_rect.x < player.x < play_again_rect.x + play_again_rect.w) or
             (player.x < play_again_rect.x < player.x + player.w) or
@@ -141,12 +148,14 @@ class ManagementGame:
 
     @staticmethod
     def clear_enemy() -> None:
+        """Clears all enemies and resets player position."""
         enemies_list.clear()
         player.x = 940
         player.y = 1100
 
     @staticmethod
     def manage_wave() -> None:
+        """Handles wave progression and updates wave parameters."""
         global last_wave_score, step_wave, generate_enemy, wave
         global starting_time, running, end_flag_starting_time, COUNT_OF_ENEMY
 
@@ -173,6 +182,7 @@ class ManagementGame:
 
     @staticmethod
     def check_time(count: int) -> bool:
+        """Checks and updates the countdown for wave management."""
         global i_for_wave, starting_time, end_flag_starting_time
         i_for_wave += 1
         if i_for_wave - count == 0:
@@ -184,6 +194,7 @@ class ManagementGame:
 
     @staticmethod
     def into_while() -> None:
+        """Primary game loop handling enemy generation, player movement, and wave updates."""
         ManagementGame.show_title(score)
         ManagementGame.manage_wave()
         keys = pygame.key.get_pressed()
@@ -211,6 +222,7 @@ class ManagementGame:
 
     @staticmethod
     def check_player() -> None:
+        """Checks player position to ensure it remains within the screen boundaries."""
         global player
         if player.x + player.w > SIZE_OF_WINDOW[0]:
             player.x = SIZE_OF_WINDOW[0] - player.w
@@ -223,6 +235,7 @@ class ManagementGame:
 
 
 class Color:
+    """Class for color handling and random color generation."""
     color_rgb: Optional[Tuple[int, int, int]] = None
     NAME_OF_SOME_COLOR: List[str] = [
         'DarkGreen', 'Green', 'DarkCyan', 'DeepSkyBlue', 'DarkTurquoise',
@@ -234,9 +247,11 @@ class Color:
     ]
 
     def __init__(self, color: str = "white") -> None:
+        """Initializes color by RGB based on input color name."""
         self.get_rgb(color)
 
     def get_rgb(self, color: str) -> None:
+        """Converts color name to RGB format."""
         c = list(colour.Color(color).get_rgb())
         c[0] = int(c[0] * 255)
         c[1] = int(c[1] * 255)
@@ -244,13 +259,16 @@ class Color:
         self.color_rgb = tuple(c)
 
     def get_color(self) -> Optional[Tuple[int, int, int]]:
+        """Returns the RGB color."""
         return self.color_rgb
 
     def get_random_color(self) -> None:
+        """Sets a random color from predefined list."""
         self.get_rgb(random.choice(self.NAME_OF_SOME_COLOR))
 
 
 class Rect:
+    """Class for handling rectangular objects in the game."""
     x = None
     y = None
     w = None
@@ -269,6 +287,7 @@ class Rect:
             rand_color: bool = True, rand_size: bool = True, rand_position_x: bool = True,
             rand_spead: bool = True, spead: int = 5, border: int = 5, append: bool = True, rand_border: bool = True
     ) -> None:
+        """Initializes the Rect object with given properties and adds it to enemies list if required."""
         self.rand_color = rand_color
         self.x = x
         self.y = y
@@ -288,11 +307,13 @@ class Rect:
             enemies_list.append(self)
 
     def move_y(self, direction: bool = True) -> None:
+        """Moves rectangle vertically based on direction."""
         self.y += self.spead if direction else -self.spead
         self.show()
         self.destroyer()
 
     def random(self) -> None:
+        """Randomly assigns properties to the rectangle if random flags are set."""
         if self.rand_color:
             color = Color()
             color.get_random_color()
@@ -308,22 +329,26 @@ class Rect:
             self.border = random.randint(4, 15) if random.randint(0, 1) else 0
 
     def move_x(self, direction: bool = True) -> None:
+        """Moves rectangle horizontally based on direction."""
         self.x += self.spead if direction else -self.spead
         self.show()
         self.destroyer()
 
     def show(self) -> None:
+        """Displays the rectangle on the screen."""
         pygame.draw.rect(
             win, self.color, ((self.x, self.y), (self.w, self.h)), self.border
         )
 
     def destroyer(self) -> None:
+        """Destroys rectangle if it moves off screen, increases score."""
         if self.y > (SIZE_OF_WINDOW[1] + 200):
             enemies_list.remove(self)
             global score
             score += 1
 
     def check(self) -> None:
+        """Checks for collision between player and rectangle."""
         if (
             (self.x < player.x < self.x + self.w) or
             (player.x < self.x < player.x + player.w) or
