@@ -36,8 +36,14 @@ WEATHER_PARAMS = {
 }
 
 
-# Универсальная функция для запросов к API OpenWeather
 async def fetch_weather_data(url: str, params: dict) -> Optional[dict]:
+    """
+    Универсальная функция для запросов к API OpenWeather.
+
+    :param url: URL для запроса.
+    :param params: Параметры для запроса.
+    :return: Данные в формате JSON.
+    """
     logger.info(f"Запрос к API: {url} с параметрами {params}")
     try:
         async with aiohttp.ClientSession() as session:
@@ -51,8 +57,15 @@ async def fetch_weather_data(url: str, params: dict) -> Optional[dict]:
     return None
 
 
-# Получение текущей погоды
 async def get_weather(lat: Optional[float] = None, lon: Optional[float] = None, city_name: Optional[str] = None) -> str:
+    """
+    Получение текущей погоды.
+
+    :param lat: Широта.
+    :param lon: Долгота.
+    :param city_name: Название города.
+    :return: Строка с описанием погоды.
+    """
     params = WEATHER_PARAMS.copy()
     if city_name:
         params["q"] = city_name
@@ -77,8 +90,13 @@ async def get_weather(lat: Optional[float] = None, lon: Optional[float] = None, 
     return f"Погода в {city}:\n{weather}, {temp}°C"
 
 
-# Получение прогноза погоды
 async def get_forecast(city_name: str) -> str:
+    """
+    Получение прогноза погоды.
+
+    :param city_name: Название города для прогноза.
+    :return: Строка с прогнозом погоды.
+    """
     params = WEATHER_PARAMS.copy()
     params["q"] = city_name
     logger.info(f"Запрос прогноза погоды для города: {city_name}")
@@ -101,8 +119,12 @@ async def get_forecast(city_name: str) -> str:
     return "\n".join(forecast_list) if forecast_list else "Прогноз не найден."
 
 
-# Клавиатура с быстрыми действиями
 def get_weather_keyboard() -> ReplyKeyboardMarkup:
+    """
+    Создание клавиатуры для взаимодействия с пользователем.
+
+    :return: Объект клавиатуры с кнопками.
+    """
     logger.info("Создание клавиатуры для взаимодействия.")
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.add(KeyboardButton("Отправить геопозицию", request_location=True))
@@ -111,9 +133,13 @@ def get_weather_keyboard() -> ReplyKeyboardMarkup:
     return keyboard
 
 
-# Обработчики сообщений
 @dp.message_handler(commands=["start"])
 async def send_welcome(message: types.Message):
+    """
+    Обработчик команды /start.
+
+    :param message: Объект сообщения.
+    """
     logger.info(f"Получена команда /start от пользователя {message.from_user.id}")
     await message.reply(
         "Привет! Я могу рассказать тебе о погоде. Выбери действие:",
@@ -123,6 +149,11 @@ async def send_welcome(message: types.Message):
 
 @dp.message_handler(content_types=ContentType.LOCATION)
 async def handle_location(message: types.Message):
+    """
+    Обработчик геопозиции от пользователя.
+
+    :param message: Объект сообщения.
+    """
     logger.info(f"Получена геопозиция от пользователя {message.from_user.id}: {message.location}")
     if message.location:
         weather_info = await get_weather(lat=message.location.latitude, lon=message.location.longitude)
@@ -131,6 +162,11 @@ async def handle_location(message: types.Message):
 
 @dp.message_handler(content_types=ContentType.TEXT)
 async def handle_text(message: types.Message):
+    """
+    Обработчик текстовых сообщений от пользователя.
+
+    :param message: Объект сообщения.
+    """
     user_input = message.text.strip().lower()
     logger.info(f"Получено текстовое сообщение от пользователя {message.from_user.id}: {user_input}")
     forecast_match = re.match(r"прогноз\s+(.+)", user_input, re.IGNORECASE)
@@ -151,6 +187,11 @@ async def handle_text(message: types.Message):
 
 @dp.message_handler()
 async def handle_unknown(message: types.Message):
+    """
+    Обработчик неизвестных сообщений.
+
+    :param message: Объект сообщения.
+    """
     logger.warning(f"Неизвестное сообщение от пользователя {message.from_user.id}: {message.text}")
     await message.reply("Я понимаю только команды /start, геопозицию и названия городов.")
 
