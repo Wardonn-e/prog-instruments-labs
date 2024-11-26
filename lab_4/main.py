@@ -13,6 +13,10 @@ from lab_7.constants import BOT_TOKEN, WEATHER_API_KEY
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    handlers=[
+        logging.StreamHandler(),  # Логи в консоль
+        logging.FileHandler("weather_bot.log", mode="a", encoding="utf-8")  # Логи в файл
+    ],
 )
 logger = logging.getLogger(__name__)
 

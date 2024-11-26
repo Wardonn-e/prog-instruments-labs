@@ -1,0 +1,21 @@
+2024-11-26 05:26:17,810 [INFO] __main__: Запуск бота...
+2024-11-26 05:26:18,019 [INFO] aiogram: Bot: Weather [@weather_163_bot]
+2024-11-26 05:26:19,152 [WARNING] aiogram: Updates were skipped successfully.
+2024-11-26 05:26:19,152 [INFO] aiogram.dispatcher.dispatcher: Start polling.
+2024-11-26 05:26:34,014 [INFO] __main__: Получено текстовое сообщение от пользователя 695461832: moscow
+2024-11-26 05:26:34,014 [INFO] __main__: Запрос погоды по городу: Moscow
+2024-11-26 05:26:34,014 [INFO] __main__: Запрос к API: http://api.openweathermap.org/data/2.5/weather с параметрами {'appid': '15cc304f864a8af19d73acc6fead1494', 'units': 'metric', 'lang': 'ru', 'q': 'Moscow'}
+2024-11-26 05:26:34,159 [INFO] __main__: Успешный ответ от API: http://api.openweathermap.org/data/2.5/weather
+2024-11-26 05:26:34,159 [INFO] __main__: Погода в Москва: Пасмурно, -1.57°C
+2024-11-26 05:26:50,215 [INFO] __main__: Получено текстовое сообщение от пользователя 695461832: florida
+2024-11-26 05:26:50,215 [INFO] __main__: Запрос погоды по городу: Florida
+2024-11-26 05:26:50,216 [INFO] __main__: Запрос к API: http://api.openweathermap.org/data/2.5/weather с параметрами {'appid': '15cc304f864a8af19d73acc6fead1494', 'units': 'metric', 'lang': 'ru', 'q': 'Florida'}
+2024-11-26 05:26:50,331 [INFO] __main__: Успешный ответ от API: http://api.openweathermap.org/data/2.5/weather
+2024-11-26 05:26:50,331 [INFO] __main__: Погода в Флорида: Ясно, 14.19°C
+2024-11-26 05:27:05,872 [INFO] __main__: Получено текстовое сообщение от пользователя 695461832: я хочу туда☺️
+2024-11-26 05:27:05,872 [INFO] __main__: Запрос погоды по городу: Я хочу туда☺️
+2024-11-26 05:27:05,872 [INFO] __main__: Запрос к API: http://api.openweathermap.org/data/2.5/weather с параметрами {'appid': '15cc304f864a8af19d73acc6fead1494', 'units': 'metric', 'lang': 'ru', 'q': 'Я хочу туда☺️'}
+2024-11-26 05:27:05,997 [WARNING] __main__: Ошибка API http://api.openweathermap.org/data/2.5/weather: статус 404
+2024-11-26 05:27:05,997 [ERROR] __main__: Не удалось получить данные о погоде.
+2024-11-26 05:27:21,756 [INFO] aiogram.dispatcher.dispatcher: Stop polling...
+2024-11-26 05:27:21,756 [WARNING] aiogram: Goodbye!
