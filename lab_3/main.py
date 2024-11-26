@@ -52,5 +52,6 @@ def search_all_invalid_data():
 
 
 if __name__ == "__main__":
+    search_all_invalid_data()
     serialize_result(7, calculate_checksum(invalid_data))
 
